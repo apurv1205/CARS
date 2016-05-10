@@ -15,7 +15,7 @@ import scala.collection.immutable.Map
 object Recommend {
   def main(args: Array[String]) {
     //Log only warn
-    setLogger
+    Utils.Config.setLogger
 
     //Prepare data
     println("prepare data...")
@@ -31,18 +31,9 @@ object Recommend {
     recommend(model, movieTitle)
   }
 
-  def setLogger: Unit = {
-    Logger.getLogger("org").setLevel(Level.OFF)
-    Logger.getLogger("com").setLevel(Level.OFF)
-    System.setProperty("spark.ui.showConsoleProgress", "false")
-    Logger.getRootLogger.setLevel(Level.OFF)
-  }
-
   def prepareData(): (RDD[Rating], Map[Int, String]) = {
     // 1. build user rating data
-    val sc = new SparkContext(new SparkConf()
-      .setAppName("Recommend").setMaster("local[*]"))
-    sc.setCheckpointDir("checkpoint/")
+    val sc = Utils.Config.setupContext("Recommend")
     val rawUserData = sc.textFile("data/ml-100k/u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {

@@ -15,7 +15,8 @@ import org.joda.time.Duration
   */
 object AlsEvaluation {
   def main(args: Array[String]) {
-    setLogger
+    //Log only warn
+    Utils.Config.setLogger
 
     // Prepare data
     println("prepare data...")
@@ -39,30 +40,15 @@ object AlsEvaluation {
     testData.unpersist()
   }
 
-  def setLogger: Unit = {
-    Logger.getLogger("org").setLevel(Level.OFF)
-    Logger.getLogger("com").setLevel(Level.OFF)
-    System.setProperty("spark.ui.showConsoleProgress", "false")
-    Logger.getRootLogger.setLevel(Level.OFF)
-  }
-
   def prepareDate(): (RDD[Rating], RDD[Rating], RDD[Rating]) = {
     // 1. build user rating data
-    val sc = new SparkContext(new SparkConf()
-      .setAppName("Recommend").setMaster("local[*]"))
-    sc.setCheckpointDir("checkpoint/")
+    val sc = Utils.Config.setupContext("Recommend")
     val rawUserData = sc.textFile("data/ml-100k/u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {
       case Array(user, movie, rating) => Rating(user.toInt, movie.toInt, rating.toDouble)
     }
     println("total: " + ratingsRDD.count().toString + "ratings.")
-
-    // 2. build movie id map to name
-//    println("load the items data...")
-//    val itemRDD = sc.textFile("data/ml-100k/u.item")
-//    val movieTitle = itemRDD.map(line => line.split("\\|").take(2))
-//      .map(array => (array(0).toInt, array(1))).collect().toMap
 
     // 3. show data
     val numRatings = ratingsRDD.count()
