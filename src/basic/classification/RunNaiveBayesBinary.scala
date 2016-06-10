@@ -1,10 +1,10 @@
-package Classification
+package basic.classification
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
+import org.apache.spark.mllib.classification.{NaiveBayesModel, NaiveBayes}
 import org.apache.spark.mllib.feature.StandardScaler
 import org.apache.spark.rdd.RDD
 import org.joda.time.{DateTime, Duration}
@@ -12,10 +12,10 @@ import org.joda.time.{DateTime, Duration}
 /**
   * Created by roger19890107 on 5/9/16.
   */
-object RunSVMWithSGDBinary {
+object RunNaiveBayesBinary {
   def main(args: Array[String]) {
-    Utils.Config.setLogger
-    val sc = Utils.Config.setupContext("SVM")
+    context.Config.setLogger
+    val sc = context.Config.setupContext("SVM")
 
     println("Prepare data ...")
     val (trainData, validateData, testData, categoriesMap) = prepareData(sc)
@@ -55,6 +55,7 @@ object RunSVMWithSGDBinary {
       categoryFeaturesArray(categoryIdx) = 1
       val numericalFeatures = trFields.slice(4, fields.length - 1)
         .map(d => if (d == "?") 0.0 else d.toDouble)
+        .map(d => if (d < 0) 0.0 else d)
       val label = trFields(fields.length - 1).toInt
       LabeledPoint(label,
         Vectors.dense(categoryFeaturesArray ++ numericalFeatures))
@@ -62,7 +63,7 @@ object RunSVMWithSGDBinary {
 
     // 3. normalize data
     val featureData = labelPointRDD.map(_.features)
-    val stdScaler = new StandardScaler(withMean = true, withStd = true).fit(featureData)
+    val stdScaler = new StandardScaler(withMean = false, withStd = true).fit(featureData)
     val scaledRDD = labelPointRDD.map(d => LabeledPoint(d.label, stdScaler.transform(d.features)))
 
     // 4. split data
@@ -75,17 +76,15 @@ object RunSVMWithSGDBinary {
     (trainData, validateData, testData, categoriesMap)
   }
 
-  def trainModel(trainData: RDD[LabeledPoint], numIterations: Int,
-                 stepSize: Double, regParam: Double): (SVMModel, Long) = {
+  def trainModel(trainData: RDD[LabeledPoint], lambda: Double): (NaiveBayesModel, Long) = {
     val startTime = new DateTime()
-    val model = SVMWithSGD.train(trainData,
-      numIterations, stepSize, regParam)
+    val model = NaiveBayes.train(trainData, lambda)
     val endTime = new DateTime()
     val duration = new Duration(startTime, endTime)
     (model, duration.getMillis)
   }
 
-  def evaluateModel(model: SVMModel, validateData: RDD[LabeledPoint]): Double = {
+  def evaluateModel(model: NaiveBayesModel, validateData: RDD[LabeledPoint]): Double = {
     val scoreAndLabels = validateData.map { data =>
       val predict = model.predict(data.features)
       (predict, data.label)
@@ -95,16 +94,16 @@ object RunSVMWithSGDBinary {
   }
 
   def trainEvaluate(trainData: RDD[LabeledPoint],
-                    validateData: RDD[LabeledPoint]): SVMModel = {
+                    validateData: RDD[LabeledPoint]): NaiveBayesModel = {
     println("Start training ...")
-    val (model, time) = trainModel(trainData, 25, 50, 1)
+    val (model, time) = trainModel(trainData, 5)
     println("Training time(ms):" + time)
     val auc = evaluateModel(model, validateData)
     println("AUC:" + auc)
     model
   }
 
-  def predictData(sc: SparkContext, model: SVMModel, categoriesMap: Map[String, Int]): Unit ={
+  def predictData(sc: SparkContext, model: NaiveBayesModel, categoriesMap: Map[String, Int]): Unit ={
     // 1. import data
     val rawDataWithHeader = sc.textFile("data/evergreen/test.tsv")
     val rawData = rawDataWithHeader.mapPartitionsWithIndex {
@@ -121,12 +120,13 @@ object RunSVMWithSGDBinary {
       categoryFeaturesArray(categoryIdx) = 1
       val numericalFeatures = trFields.slice(4, fields.size)
         .map(d => if (d == "?") 0.0 else d.toDouble)
+        .map(d => if (d < 0) 0.0 else d)
       val features = Vectors.dense(categoryFeaturesArray ++ numericalFeatures)
       (trFields(0), features)
     }
 
     // 3. normalize data
-    val stdScaler = new StandardScaler(withMean = true, withStd = true).fit(testData.map(_._2))
+    val stdScaler = new StandardScaler(withMean = false, withStd = true).fit(testData.map(_._2))
     val scaledTestRDD = testData.map(d => (d._1, stdScaler.transform(d._2)))
 
     // 4. predict
@@ -143,34 +143,25 @@ object RunSVMWithSGDBinary {
   }
 
   def evaluateAllParameter(trainData: RDD[LabeledPoint], validateData: RDD[LabeledPoint],
-                           iterArray: Array[Int],
-                           stepArray: Array[Double],
-                           regArray: Array[Double]): SVMModel = {
+                           lambdaArray: Array[Double]): NaiveBayesModel = {
     val evaluationsArray =
-      for (numIterations <- iterArray;
-           stepSize <- stepArray;
-           regParam <- regArray) yield {
-        val (model, time) = trainModel(trainData, numIterations, stepSize, regParam)
+      for (lambda <- lambdaArray) yield {
+        val (model, time) = trainModel(trainData, lambda)
         val auc = evaluateModel(model, validateData)
-        println("params => numIterations:" + numIterations +
-          ", stepSize:" + stepSize + ", regParam:" + regParam + ", AUC:" + auc)
-        (numIterations, stepSize, regParam, auc)
+        println("params => lambda:" + lambda + ", AUC:" + auc)
+        (lambda, auc)
       }
 
-    val bestEval = (evaluationsArray.sortBy(_._4).reverse)(0)
-    println("Best params => numIterations:" + bestEval._1 +
-      ", stepSize:" + bestEval._2 + ", regParam:" + bestEval._3 + ", AUC:" + bestEval._4)
+    val bestEval = (evaluationsArray.sortBy(_._2).reverse)(0)
+    println("Best params => lambda:" + bestEval._1 + ", AUC:" + bestEval._2)
 
-    val (bestModel, time) = trainModel(trainData.union(validateData),
-      bestEval._1, bestEval._2, bestEval._3)
+    val (bestModel, time) = trainModel(trainData.union(validateData), bestEval._1)
     bestModel
   }
 
   def parameterTuning(trainData: RDD[LabeledPoint],
-                      validateData: RDD[LabeledPoint]): SVMModel = {
-    val iterArray = Array(1, 3, 5, 15, 25)
-    val stepArray = Array(10.0, 50.0, 100.0, 200.0)
-    val regArray = Array(0.01, 0.1, 1)
-    evaluateAllParameter(trainData, validateData, iterArray, stepArray, regArray)
+                      validateData: RDD[LabeledPoint]): NaiveBayesModel = {
+    val lambdaArray = Array(1.0, 3.0, 5.0, 15.0, 25.0)
+    evaluateAllParameter(trainData, validateData, lambdaArray)
   }
 }

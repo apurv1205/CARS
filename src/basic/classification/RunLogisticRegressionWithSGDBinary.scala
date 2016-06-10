@@ -1,4 +1,4 @@
-package Classification
+package basic.classification
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
@@ -13,8 +13,8 @@ import org.joda.time.{DateTime, Duration}
   */
 object RunLogisticRegressionWithSGDBinary {
   def main(args: Array[String]) {
-    Utils.Config.setLogger
-    val sc = Utils.Config.setupContext("LogisticRegression")
+    context.Config.setLogger
+    val sc = context.Config.setupContext("LogisticRegression")
 
     println("Prepare data ...")
     val (trainData, validateData, testData, categoriesMap) = prepareData(sc)

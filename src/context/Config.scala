@@ -1,4 +1,4 @@
-package Utils
+package context
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
@@ -10,7 +10,7 @@ object Config {
   def setLogger: Unit = {
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("com").setLevel(Level.OFF)
-    System.setProperty("spark.ui.showConsoleProgress", "false")
+    //System.setProperty("spark.ui.showConsoleProgress", "false")
     Logger.getRootLogger.setLevel(Level.OFF)
   }
 

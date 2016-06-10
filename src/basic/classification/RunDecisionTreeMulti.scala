@@ -1,4 +1,4 @@
-package Classification
+package basic.classification
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
@@ -15,8 +15,8 @@ import org.joda.time.{DateTime, Duration}
 object RunDecisionTreeMulti {
 
   def main(args: Array[String]) {
-    Utils.Config.setLogger
-    val sc = Utils.Config.setupContext("DecisionTreeMulti")
+    context.Config.setLogger
+    val sc = context.Config.setupContext("DecisionTreeMulti")
 
     println("Prepare data ...")
     val (trainData, validateData, testData) = prepareData(sc)

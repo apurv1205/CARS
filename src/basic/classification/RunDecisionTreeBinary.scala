@@ -1,4 +1,4 @@
-package Classification
+package basic.classification
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
@@ -14,8 +14,8 @@ import org.joda.time.{DateTime, Duration}
   */
 object RunDecisionTreeBinary {
   def main(args: Array[String]) {
-    Utils.Config.setLogger
-    val sc = Utils.Config.setupContext("DecisionTreeBinary")
+    context.Config.setLogger
+    val sc = context.Config.setupContext("DecisionTreeBinary")
 
     println("Prepare data ...")
     val (trainData, validateData, testData, categoriesMap) = prepareData(sc)

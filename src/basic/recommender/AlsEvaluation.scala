@@ -1,6 +1,6 @@
-package Recommender
+package basic.recommender
 
-import Utils.Chart
+import context.Chart
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
@@ -16,7 +16,7 @@ import org.joda.time.Duration
 object AlsEvaluation {
   def main(args: Array[String]) {
     //Log only warn
-    Utils.Config.setLogger
+    context.Config.setLogger
 
     // Prepare data
     println("prepare data...")
@@ -42,7 +42,7 @@ object AlsEvaluation {
 
   def prepareDate(): (RDD[Rating], RDD[Rating], RDD[Rating]) = {
     // 1. build user rating data
-    val sc = Utils.Config.setupContext("Recommend")
+    val sc = context.Config.setupContext("Recommend")
     val rawUserData = sc.textFile("data/ml-100k/u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {

@@ -2,6 +2,7 @@
 ### Scala template
 *.class
 *.log
+metastore_db
 
 # sbt specific
 .cache
@@ -83,3 +84,4 @@ data/
 
 # Mac
 .DS_Store
+
