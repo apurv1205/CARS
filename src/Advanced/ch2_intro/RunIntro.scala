@@ -1,6 +1,7 @@
 package advanced.ch2_intro
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.util.StatCounter
 
 /**
   * Created by roger19890107 on 6/3/16.
@@ -13,8 +14,10 @@ object RunIntro {
     context.Config.setLogger
     val sc = context.Config.setupContext("Intro")
 
-    val rawblocks = sc.textFile("file:///Volumes/RogerDrive/Developer/dataset/aas/ch1-linkage")
+    val rawblocks = sc.textFile("file:///Volumes/RogerDrive/Developer/dataset/aas/ch2-linkage")
     def isHeader(line: String) = line.contains("id_1")
+
+    rawblocks.take(4).foreach(println)
 
     val noheader = rawblocks.filter(x => !isHeader(x))
     def toDouble(s: String) = if (s.equals("?")) Double.NaN else s.toDouble
@@ -81,4 +84,32 @@ object RunIntro {
       n1.zip(n2).map { case (a, b) => a.merge(b) }
     })
   }
+}
+
+class NAStatCounter extends Serializable {
+  val stats: StatCounter = new StatCounter()
+  var missing: Long = 0
+
+  def add(x: Double): NAStatCounter = {
+    if (x.isNaN) {
+      missing += 1
+    } else {
+      stats.merge(x)
+    }
+    this
+  }
+
+  def merge(other: NAStatCounter): NAStatCounter = {
+    stats.merge(other.stats)
+    missing += other.missing
+    this
+  }
+
+  override def toString = {
+    "stats: " + stats.toString() + " NaN: " + missing
+  }
+}
+
+object NAStatCounter extends Serializable {
+  def apply(x: Double): NAStatCounter = new NAStatCounter().add(x)
 }

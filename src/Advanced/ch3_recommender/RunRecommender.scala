@@ -14,7 +14,7 @@ import scala.util.Random
   * Created by roger19890107 on 6/10/16.
   */
 object RunRecommender {
-  val base = "file:///Volumes/RogerDrive/Developer/dataset/aas/ch2-music/"
+  val base = "file:///Volumes/RogerDrive/Developer/dataset/aas/ch3-music/"
 
   def main(args: Array[String]) {
     context.Config.setLogger

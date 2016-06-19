@@ -16,7 +16,7 @@ object Config {
 
   def setupContext(appName: String): SparkContext = {
     val sc = new SparkContext(new SparkConf()
-      .setAppName(appName).setMaster("local[*]"))
+      .setAppName(appName).setMaster("local[*]").setExecutorEnv("driver-memory", "6g"))
     sc.setCheckpointDir("checkpoint/")
     sc
   }
