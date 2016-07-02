@@ -14,6 +14,8 @@ import org.joda.time.Duration
   * Created by roger19890107 on 4/5/16.
   */
 object AlsEvaluation {
+  val base = "file:///Volumes/RogerDrive/Developer/dataset/hadoop-spark/ml-100k/"
+
   def main(args: Array[String]) {
     //Log only warn
     context.Config.setLogger
@@ -43,7 +45,7 @@ object AlsEvaluation {
   def prepareDate(): (RDD[Rating], RDD[Rating], RDD[Rating]) = {
     // 1. build user rating data
     val sc = context.Config.setupContext("Recommend")
-    val rawUserData = sc.textFile("data/ml-100k/u.data")
+    val rawUserData = sc.textFile(base + "u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {
       case Array(user, movie, rating) => Rating(user.toInt, movie.toInt, rating.toDouble)
