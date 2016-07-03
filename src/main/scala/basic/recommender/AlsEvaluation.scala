@@ -18,7 +18,7 @@ object AlsEvaluation {
 
   def main(args: Array[String]) {
     //Log only warn
-    context.Config.setLogger
+    context.Env.setLogger
 
     // Prepare data
     println("prepare data...")
@@ -44,7 +44,7 @@ object AlsEvaluation {
 
   def prepareDate(): (RDD[Rating], RDD[Rating], RDD[Rating]) = {
     // 1. build user rating data
-    val sc = context.Config.setupContext("Recommend")
+    val sc = context.Env.setupContext("Recommend")
     val rawUserData = sc.textFile(base + "u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {

@@ -13,8 +13,8 @@ import org.joda.time.{DateTime, Duration}
   */
 object RunLogisticRegressionWithSGDBinary {
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("LogisticRegression")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("LogisticRegression")
 
     println("Prepare data ...")
     val (trainData, validateData, testData, categoriesMap) = prepareData(sc)

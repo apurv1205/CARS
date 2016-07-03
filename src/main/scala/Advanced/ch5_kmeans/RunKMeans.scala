@@ -15,8 +15,8 @@ object RunKMeans {
   val base = "file:///Volumes/RogerDrive/Developer/dataset/aas/ch5-network/"
 
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("K-means")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("K-means")
     val rawData = sc.textFile(base + "kddcup.data")
 
     //clusteringTake0(rawData)

@@ -15,8 +15,8 @@ import org.joda.time.{DateTime, Duration}
 object RunDecisionTreeMulti {
 
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("DecisionTreeMulti")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("DecisionTreeMulti")
 
     println("Prepare data ...")
     val (trainData, validateData, testData) = prepareData(sc)

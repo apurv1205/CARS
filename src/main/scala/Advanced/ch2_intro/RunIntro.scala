@@ -11,8 +11,8 @@ case class Scored(md: MatchData, score: Double)
 
 object RunIntro {
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("Intro")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("Intro")
 
     val rawblocks = sc.textFile("file:///Volumes/RogerDrive/Developer/dataset/aas/ch2-linkage")
     def isHeader(line: String) = line.contains("id_1")

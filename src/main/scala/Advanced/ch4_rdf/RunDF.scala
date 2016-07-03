@@ -14,8 +14,8 @@ object RunDF {
   val base = "file:///Volumes/RogerDrive/Developer/dataset/aas/ch4-covtype/"
 
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("RDF")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("RDF")
 
     // load covtype data
     val rawData = sc.textFile(base + "covtype.data")

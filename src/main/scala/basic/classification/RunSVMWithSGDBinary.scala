@@ -14,8 +14,8 @@ import org.joda.time.{DateTime, Duration}
   */
 object RunSVMWithSGDBinary {
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("SVM")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("SVM")
 
     println("Prepare data ...")
     val (trainData, validateData, testData, categoriesMap) = prepareData(sc)

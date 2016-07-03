@@ -14,8 +14,8 @@ import org.joda.time.{DateTime, Duration}
   */
 object RunDecisionTreeRegression {
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("DecisionTreeBinary")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("DecisionTreeBinary")
 
     println("Prepare data ...")
     val (trainData, validateData, testData) = prepareData(sc)

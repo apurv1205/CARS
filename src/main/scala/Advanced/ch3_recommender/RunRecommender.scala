@@ -17,8 +17,8 @@ object RunRecommender {
   val base = "file:///Volumes/RogerDrive/Developer/dataset/aas/ch3-music/"
 
   def main(args: Array[String]) {
-    context.Config.setLogger
-    val sc = context.Config.setupContext("Recommender")
+    context.Env.setLogger
+    val sc = context.Env.setupContext("Recommender")
     val rawUserArtistData = sc.textFile(base + "user_artist_data.txt")
     val rawArtistData = sc.textFile(base + "artist_data.txt")
     val rawArtistAlias = sc.textFile(base + "artist_alias.txt")

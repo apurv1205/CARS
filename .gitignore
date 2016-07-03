@@ -79,7 +79,7 @@ crashlytics-build.properties
 fabric.properties
 
 # data
-checkpoint/
+data/checkpoint/
 data/
 
 # Mac

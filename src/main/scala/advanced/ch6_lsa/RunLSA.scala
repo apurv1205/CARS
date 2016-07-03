@@ -30,7 +30,7 @@ object RunLSA {
     val sampleSize = 0.00001
 
     // spark config
-    context.Config.setLogger
+    context.Env.setLogger
     val conf = new SparkConf()
       .setAppName("Wiki LSA")
       .setMaster("local[*]")

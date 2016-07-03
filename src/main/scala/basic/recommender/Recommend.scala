@@ -15,7 +15,7 @@ import scala.collection.immutable.Map
 object Recommend {
   def main(args: Array[String]) {
     //Log only warn
-    context.Config.setLogger
+    context.Env.setLogger
 
     //Prepare data
     println("prepare data...")
@@ -33,7 +33,7 @@ object Recommend {
 
   def prepareData(): (RDD[Rating], Map[Int, String]) = {
     // 1. build user rating data
-    val sc = context.Config.setupContext("Recommend")
+    val sc = context.Env.setupContext("Recommend")
     val rawUserData = sc.textFile("data/ml-100k/u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {

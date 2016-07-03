@@ -6,7 +6,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by roger19890107 on 5/8/16.
   */
-object Config {
+object Env {
   def setLogger: Unit = {
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("com").setLevel(Level.OFF)
@@ -17,7 +17,7 @@ object Config {
   def setupContext(appName: String): SparkContext = {
     val sc = new SparkContext(new SparkConf()
       .setAppName(appName).setMaster("local[*]").setExecutorEnv("driver-memory", "6g"))
-    sc.setCheckpointDir("checkpoint/")
+    sc.setCheckpointDir("data/checkpoint/")
     sc
   }
 }
