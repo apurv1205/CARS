@@ -29,21 +29,26 @@ object KNNRecommendModel {
     */
   def getWeightScores(ratings: Array[(Int, Double)],
                       similarities: Array[(Int, Double)]): Double = {
-    // join buy key
-    val joinRatsAndSims = (ratings ++ similarities)
-      .groupBy(_._1)
-      .filter(_._2.length == 2)
-      .mapValues(arr => (arr(0)._2, arr(1)._2))
-      .values
+    var scores: Double = 0.0
+    var total: Double = 0.0
+    var i = 0
+    var j = 0
+    while (i < ratings.length && j < similarities.length) {
+      val rat = ratings(i)
+      val sim = similarities(j)
+      if (rat._1 == sim._1) {
+        scores += (rat._2 * sim._2)
+        total += sim._2
+        i += 1
+        j += 1
+      } else if (rat._1 < sim._1) {
+        i += 1
+      } else {
+        j += 1
+      }
+    }
 
-    if (joinRatsAndSims.isEmpty) return 0
-
-    // weight predict scores
-    val weightSum = joinRatsAndSims.map(_._2).sum
-
-    joinRatsAndSims.map {
-      case (rating, similarity) => rating * similarity
-    }.sum / weightSum
+    if (total == 0.0) 0.0 else scores / total
   }
 
   def recommend(ratings: Array[(Int, Double)],
