@@ -88,6 +88,13 @@ object Test {
     var scores: Double = 0.0
     var total: Double = 0.0
 
+//    (ratings.keySet & similarities.keySet).foreach { key =>
+//      val rat = ratings(key)
+//      val sim = similarities(key)
+//      scores += (rat * sim)
+//      total += sim
+//    }
+
     if (ratings.size < similarities.size) {
       ratings.foreach {
         case (obj, rating) =>
