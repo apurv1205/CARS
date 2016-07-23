@@ -1,4 +1,4 @@
-package advanced.ch2_intro
+package aas.ch2_intro
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.util.StatCounter

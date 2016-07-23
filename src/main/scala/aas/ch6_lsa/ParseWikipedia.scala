@@ -1,4 +1,4 @@
-package advanced.ch6_lsa
+package aas.ch6_lsa
 
 import java.io.{FileOutputStream, PrintStream}
 import java.util.Properties

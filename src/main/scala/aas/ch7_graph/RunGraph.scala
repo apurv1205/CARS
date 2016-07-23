@@ -1,4 +1,4 @@
-package advanced.ch7_graph
+package aas.ch7_graph
 
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest

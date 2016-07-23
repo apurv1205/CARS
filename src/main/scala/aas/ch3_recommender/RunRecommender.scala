@@ -1,4 +1,4 @@
-package advanced.ch3_recommender
+package aas.ch3_recommender
 
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast

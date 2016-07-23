@@ -1,4 +1,4 @@
-package advanced.ch6_lsa
+package aas.ch6_lsa
 
 import org.apache.spark.{SparkConf, SparkContext}
 import ParseWikipedia._

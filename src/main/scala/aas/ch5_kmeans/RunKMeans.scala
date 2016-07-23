@@ -1,4 +1,4 @@
-package advanced.ch5_kmeans
+package aas.ch5_kmeans
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.clustering.KMeansModel

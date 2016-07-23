@@ -1,4 +1,4 @@
-package advanced.ch4_rdf
+package aas.ch4_rdf
 
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
 import org.apache.spark.mllib.linalg.Vectors
