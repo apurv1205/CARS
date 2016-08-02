@@ -12,7 +12,6 @@ case class Scored(md: MatchData, score: Double)
 
 object RunIntro {
   def main(args: Array[String]) {
-    Env.setLogger
     val sc = Env.setupContext("Intro")
 
     val rawblocks = sc.textFile("file:///Volumes/RogerDrive/Developer/dataset/aas/ch2-linkage")
