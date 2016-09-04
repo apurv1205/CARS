@@ -2,7 +2,7 @@
 ### Scala template
 *.class
 *.log
-metastore_db
+.idea
 
 # sbt specific
 .cache
@@ -84,4 +84,11 @@ data/
 
 # Mac
 .DS_Store
+
+# Spark
+metastore_db
+h2ologs
+derby.log
+
+
 
