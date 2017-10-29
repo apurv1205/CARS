@@ -1,22 +1,12 @@
-package com.github.b96705008.basic.recommender
+package basic.recommender
 
-import com.github.b96705008.context.Env
-import java.io.File
-import scala.io.Source
-import org.apache.log4j.{Logger, Level}
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.SparkContext._
+import context.Env
 import org.apache.spark.rdd._
 import org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationModel}
 import scala.collection.immutable.Map
 
-/**
-  * Created by roger19890107 on 4/4/16.
-  */
 object Recommend {
   def main(args: Array[String]) {
-    //Log only warn
-    Env.setLogger
 
     //Prepare data
     println("prepare data...")
@@ -35,7 +25,7 @@ object Recommend {
   def prepareData(): (RDD[Rating], Map[Int, String]) = {
     // 1. build user rating data
     val sc = Env.setupContext("Recommend")
-    val rawUserData = sc.textFile("data/ml-100k/u.data")
+    val rawUserData = sc.textFile("u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {
       case Array(user, movie, rating) => Rating(user.toInt, movie.toInt, rating.toDouble)

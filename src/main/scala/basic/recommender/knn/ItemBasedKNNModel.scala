@@ -1,4 +1,4 @@
-package com.github.b96705008.basic.recommender.knn
+package recommender.knn
 
 import org.apache.spark.mllib.recommendation.Rating
 import org.apache.spark.rdd.RDD

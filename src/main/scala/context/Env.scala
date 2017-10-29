@@ -1,11 +1,8 @@
-package com.github.b96705008.context
+package context
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 
-/**
-  * Created by roger19890107 on 5/8/16.
-  */
 object Env {
   def setLogger: Unit = {
     Logger.getLogger("org").setLevel(Level.OFF)
@@ -15,7 +12,6 @@ object Env {
   }
 
   def setupContext(appName: String): SparkContext = {
-    setLogger
 
     val sc = new SparkContext(new SparkConf()
       .setAppName(appName).setMaster("local[*]").setExecutorEnv("driver-memory", "6g"))

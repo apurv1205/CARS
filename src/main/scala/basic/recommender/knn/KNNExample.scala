@@ -1,6 +1,6 @@
-package com.github.b96705008.basic.recommender.knn
+package recommender.knn
 
-import com.github.b96705008.context.Env
+import context.Env
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.recommendation.Rating
 import org.apache.spark.rdd.RDD
@@ -9,7 +9,6 @@ import org.apache.spark.rdd.RDD
   * Created by roger19890107 on 7/2/16.
   */
 object KNNExample {
-  val base = "file:///Volumes/RogerDrive/Developer/dataset/hadoop-spark/ml-100k/"
 
   def main(args: Array[String]) {
     Env.setLogger
@@ -31,7 +30,7 @@ object KNNExample {
 
   def prepareDate(sc: SparkContext): (RDD[Rating], RDD[Rating], RDD[Rating]) = {
     // 1. build user rating data
-    val rawUserData = sc.textFile(base + "u.data")
+    val rawUserData = sc.textFile("u.data")
     val rawRatings = rawUserData.map(_.split("\t").take(3))
     val ratingsRDD = rawRatings.map {
       case Array(user, movie, rating) => Rating(user.toInt, movie.toInt, rating.toDouble)

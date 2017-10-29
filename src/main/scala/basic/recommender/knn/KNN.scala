@@ -1,4 +1,4 @@
-package com.github.b96705008.basic.recommender.knn
+package recommender.knn
 
 import org.apache.spark.mllib.linalg.distributed.{CoordinateMatrix, MatrixEntry, RowMatrix}
 import org.apache.spark.mllib.recommendation.Rating
@@ -6,9 +6,6 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.mllib.rdd.MLPairRDDFunctions._
 import org.apache.spark.mllib.stat.Statistics
 
-/**
-  * Created by roger19890107 on 7/2/16.
-  */
 object KNN {
 
   private def getSims(ratingMatrix: RowMatrix, topK: Int): Unit = {
