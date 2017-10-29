@@ -1,2 +1,2 @@
-# SparkML
-Spark ML lib example and testing
+# CARS
+Context Aware Recommendation System
